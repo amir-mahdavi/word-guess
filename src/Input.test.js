@@ -12,8 +12,11 @@ import Input from './Input';
  */
 const setup = (initialState = {}) => {
   const store = storeFactory(initialState);
-  const wrapper = shallow(<Input store={store} />);
+  const wrapper = shallow(<Input store={store} />)
+    .dive() // using dive to get inner component from the HOC
+    .dive(); // redux 7.0 you need 2 dives!
   console.log(wrapper.debug());
+  return wrapper;
 };
 
 setup();
