@@ -12,6 +12,12 @@ import Input from './Input';
  */
 const setup = (initialState = {}) => {
   const store = storeFactory(initialState);
+  /**
+   * Redux recommends exporting the unconnected component separately
+   * and using it for test purposes
+   * Enzyme recommends exporting the connected component
+   * and use dive() methodd to get the component to test
+   */
   const wrapper = shallow(<Input store={store} />)
     .dive() // using dive to get inner component from the HOC
     .dive(); // redux 7.0 you need 2 dives!
