@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { guessWord } from './actions';
+
 class Input extends Component {
   renderContents() {
     return this.props.success ? null : (
@@ -25,4 +27,7 @@ class Input extends Component {
 
 const mapStateToProps = ({ success }) => ({ success });
 
-export default connect(mapStateToProps)(Input);
+export default connect(
+  mapStateToProps,
+  { guessWord } // don't need to control dispatch here, so instead of mapDispatchToProps just use the object
+)(Input);
