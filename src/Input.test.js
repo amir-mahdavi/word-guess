@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { findByTestAttr, storeFactory } from '../test/testUtils';
-import Input from './Input';
+import Input, { UnconnectedInput } from './Input';
 
 /**
  * Factory function to create a ShallowWrapper for the Input component
@@ -76,5 +76,35 @@ describe('redux props', () => {
     const wrapper = setup();
     const guessWordProp = wrapper.instance().props.guessWord;
     expect(guessWordProp).toBeInstanceOf(Function);
+  });
+});
+
+describe('guessWord action creator call', () => {
+  let guessWordMock;
+  let wrapper;
+  const guessedWord = 'train';
+  beforeEach(() => {
+    guessWordMock = jest.fn();
+    const props = {
+      guessWord: guessWordMock
+    };
+    wrapper = shallow(<UnconnectedInput {...props} />);
+
+    wrapper.instance().inputBox.current = { value: guessedWord };
+
+    const submitButton = findByTestAttr(wrapper, 'submit-button');
+    submitButton.simulate('click', {
+      preventDefault() {} // give it an event object so the handler could expect it as argument (evt)
+    });
+  });
+
+  test('guessWord is called once when submit is clicked', () => {
+    const guessWordMockCallCount = guessWordMock.mock.calls.length;
+    expect(guessWordMockCallCount).toBe(1);
+  });
+
+  test('guessWord is called with inputBox value as argument', () => {
+    const guessWordMockArgument = guessWordMock.mock.calls[0][0];
+    expect(guessWordMockArgument).toBe(guessedWord);
   });
 });
